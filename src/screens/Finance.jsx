@@ -1,15 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { addExpense, getExpenses, addSale, getSales, addBudget, getBudgets } from '../services/dbService';
 
 export default function Finance() {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState('expenses');
-  const [expenses, setExpenses] = useState([
-    { id: 1, type: 'feed', date: '2025-04-01', amount: '15,000', notes: 'شراء علف' }
-  ]);
-  const [sales, setSales] = useState([
-    { id: 1, type: 'batch_sale', date: '2025-04-03', amount: '45,000', notes: 'بيع دفعة أبريل' }
-  ]);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [expenses, setExpenses] = useState([]);
+  const [sales, setSales] = useState([]);
+  const [budgets, setBudgets] = useState([]);
   const [newExpense, setNewExpense] = useState({
     type: 'feed',
     date: new Date().toISOString().split('T')[0],
@@ -22,98 +20,185 @@ export default function Finance() {
     amount: '',
     notes: ''
   });
+  const [newBudget, setNewBudget] = useState({
+    name: '',
+    amount: '',
+    period: 'monthly',
+    startDate: new Date().toISOString().split('T')[0]
+  });
 
-  const expenseTypes = [
-    { value: 'feed', label: t('feed') },
-    { value: 'vaccine', label: t('vaccines') },
-    { value: 'salary', label: t('salaries') },
-    { value: 'equipment', label: t('equipment') },
-    { value: 'other', label: t('other') }
-  ];
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  const saleTypes = [
-    { value: 'batch_sale', label: t('batchSale') },
-    { value: 'manure', label: t('manureSale') },
-    { value: 'other', label: t('other') }
-  ];
+  const loadData = async () => {
+    const exp = await getExpenses();
+    const sal = await getSales();
+    const bud = await getBudgets();
+    setExpenses(exp);
+    setSales(sal);
+    setBudgets(bud);
+  };
 
-  const handleAddExpense = (e) => {
+  const handleAddExpense = async (e) => {
     e.preventDefault();
     if (!newExpense.amount) return;
-    const expense = { id: Date.now(), ...newExpense };
-    setExpenses(prev => [expense, ...prev]);
+    await addExpense(newExpense);
     setNewExpense({
       type: 'feed',
       date: new Date().toISOString().split('T')[0],
       amount: '',
       notes: ''
     });
+    loadData();
     alert(t('expenseAdded'));
   };
 
-  const handleAddSale = (e) => {
+  const handleAddSale = async (e) => {
     e.preventDefault();
     if (!newSale.amount) return;
-    const sale = { id: Date.now(), ...newSale };
-    setSales(prev => [sale, ...prev]);
+    await addSale(newSale);
     setNewSale({
       type: 'batch_sale',
       date: new Date().toISOString().split('T')[0],
       amount: '',
       notes: ''
     });
+    loadData();
     alert(t('saleAdded'));
   };
 
-  const totalExpenses = expenses.reduce((sum, exp) => sum + parseFloat(exp.amount.replace(/,/g, '')), 0);
-  const totalSales = sales.reduce((sum, sale) => sum + parseFloat(sale.amount.replace(/,/g, '')), 0);
+  const handleAddBudget = async (e) => {
+    e.preventDefault();
+    if (!newBudget.name || !newBudget.amount) return;
+    await addBudget(newBudget);
+    setNewBudget({
+      name: '',
+      amount: '',
+      period: 'monthly',
+      startDate: new Date().toISOString().split('T')[0]
+    });
+    loadData();
+    alert(t('budgetAdded'));
+  };
+
+  // ✅ حسابات مالية متقدمة
+  const totalExpenses = expenses.reduce((sum, exp) => sum + parseFloat(exp.amount || 0), 0);
+  const totalSales = sales.reduce((sum, sale) => sum + parseFloat(sale.amount || 0), 0);
   const profit = totalSales - totalExpenses;
+  const profitMargin = totalSales > 0 ? ((profit / totalSales) * 100).toFixed(1) : 0;
+
+  const fixedCosts = expenses
+    .filter(e => ['salary', 'equipment'].includes(e.type))
+    .reduce((sum, e) => sum + parseFloat(e.amount || 0), 0);
+  const variableCosts = totalExpenses - fixedCosts;
+
+  const totalBudget = budgets.reduce((sum, b) => sum + parseFloat(b.amount || 0), 0);
+  const budgetUtilization = totalBudget > 0 ? ((totalExpenses / totalBudget) * 100).toFixed(1) : 0;
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <h1 className="text-xl font-bold mb-4">{t('finance')}</h1>
+      <h1 className="text-xl font-bold mb-4">{t('advancedFinance')}</h1>
 
-      {/* Summary */}
-      <div className="grid grid-cols-3 gap-2 mb-4">
-        <SummaryCard label={t('totalExpenses')} value={`${totalExpenses.toLocaleString()} ج.س`} color="text-red-600 dark:text-red-400" />
-        <SummaryCard label={t('totalSales')} value={`${totalSales.toLocaleString()} ج.س`} color="text-green-600 dark:text-green-400" />
-        <SummaryCard label={t('profit')} value={`${profit.toLocaleString()} ج.س`} color={profit >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"} />
-      </div>
+      {/* لوحة التحليل المالي */}
+      {activeTab === 'overview' && (
+        <div className="space-y-4 mb-6">
+          <div className="grid grid-cols-2 gap-2">
+            <SummaryCard label={t('totalSales')} value={`${totalSales.toLocaleString()} ج.س`} color="text-green-600 dark:text-green-400" />
+            <SummaryCard label={t('totalExpenses')} value={`${totalExpenses.toLocaleString()} ج.س`} color="text-red-600 dark:text-red-400" />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <SummaryCard label={t('profit')} value={`${profit.toLocaleString()} ج.س`} color={profit >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"} />
+            <SummaryCard label={t('profitMargin')} value={`${profitMargin}%`} color="text-blue-600 dark:text-blue-400" />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <SummaryCard label={t('fixedCosts')} value={`${fixedCosts.toLocaleString()} ج.س`} color="text-amber-600 dark:text-amber-400" />
+            <SummaryCard label={t('variableCosts')} value={`${variableCosts.toLocaleString()} ج.س`} color="text-purple-600 dark:text-purple-400" />
+          </div>
+          {budgets.length > 0 && (
+            <div className="bg-white dark:bg-gray-800 p-3 rounded shadow">
+              <div className="flex justify-between text-sm">
+                <span>{t('budgetUtilization')}</span>
+                <span className="font-bold">{budgetUtilization}%</span>
+              </div>
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
+                <div 
+                  className="bg-emerald-600 h-2 rounded-full" 
+                  style={{ width: `${Math.min(budgetUtilization, 100)}%` }}
+                ></div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
-      {/* Tabs */}
-      <div className="flex mb-4 border-b">
+      {/* علامات التبويب */}
+      <div className="flex mb-4 overflow-x-auto whitespace-nowrap">
         <button
-          className={`px-4 py-2 font-medium ${activeTab === 'expenses' ? 'text-emerald-600 border-b-2 border-emerald-600' : 'text-gray-500'}`}
+          className={`px-4 py-2 font-medium ${
+            activeTab === 'overview' 
+              ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600' 
+              : 'text-gray-500 dark:text-gray-400'
+          }`}
+          onClick={() => setActiveTab('overview')}
+        >
+          {t('overview')}
+        </button>
+        <button
+          className={`px-4 py-2 font-medium ${
+            activeTab === 'expenses' 
+              ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600' 
+              : 'text-gray-500 dark:text-gray-400'
+          }`}
           onClick={() => setActiveTab('expenses')}
         >
           {t('expenses')}
         </button>
         <button
-          className={`px-4 py-2 font-medium ${activeTab === 'sales' ? 'text-emerald-600 border-b-2 border-emerald-600' : 'text-gray-500'}`}
+          className={`px-4 py-2 font-medium ${
+            activeTab === 'sales' 
+              ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600' 
+              : 'text-gray-500 dark:text-gray-400'
+          }`}
           onClick={() => setActiveTab('sales')}
         >
           {t('sales')}
         </button>
+        <button
+          className={`px-4 py-2 font-medium ${
+            activeTab === 'budget' 
+              ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600' 
+              : 'text-gray-500 dark:text-gray-400'
+          }`}
+          onClick={() => setActiveTab('budget')}
+        >
+          {t('budget')}
+        </button>
       </div>
 
-      {/* Content */}
-      {activeTab === 'expenses' ? (
-        <ExpenseForm
+      {/* محتوى التبويبات */}
+      {activeTab === 'budget' ? (
+        <BudgetSection 
+          budgets={budgets} 
+          newBudget={newBudget}
+          setNewBudget={setNewBudget}
+          handleAddBudget={handleAddBudget}
+        />
+      ) : activeTab === 'expenses' ? (
+        <ExpenseForm 
           newExpense={newExpense}
           setNewExpense={setNewExpense}
-          expenseTypes={expenseTypes}
           handleSubmit={handleAddExpense}
           expenses={expenses}
         />
-      ) : (
-        <SaleForm
+      ) : activeTab === 'sales' ? (
+        <SaleForm 
           newSale={newSale}
           setNewSale={setNewSale}
-          saleTypes={saleTypes}
           handleSubmit={handleAddSale}
           sales={sales}
         />
-      )}
+      ) : null}
     </div>
   );
 }
@@ -127,8 +212,77 @@ function SummaryCard({ label, value, color }) {
   );
 }
 
-function ExpenseForm({ newExpense, setNewExpense, expenseTypes, handleSubmit, expenses }) {
+function BudgetSection({ budgets, newBudget, setNewBudget, handleAddBudget }) {
   const { t } = useTranslation();
+  const [adding, setAdding] = useState(false);
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="font-bold">{t('budgetManagement')}</h2>
+        <button 
+          onClick={() => setAdding(!adding)}
+          className="text-emerald-600 dark:text-emerald-400 text-sm"
+        >
+          {adding ? t('cancel') : `+ ${t('addBudget')}`}
+        </button>
+      </div>
+
+      {adding && (
+        <form onSubmit={handleAddBudget} className="bg-white dark:bg-gray-800 p-3 rounded shadow mb-4">
+          <input
+            type="text"
+            placeholder={t('budgetName')}
+            value={newBudget.name}
+            onChange={(e) => setNewBudget(prev => ({ ...prev, name: e.target.value }))}
+            className="w-full p-2 mb-2 border rounded dark:bg-gray-700 dark:text-white"
+            required
+          />
+          <input
+            type="number"
+            placeholder={t('amount')}
+            value={newBudget.amount}
+            onChange={(e) => setNewBudget(prev => ({ ...prev, amount: e.target.value }))}
+            className="w-full p-2 mb-2 border rounded dark:bg-gray-700 dark:text-white"
+            required
+          />
+          <select
+            value={newBudget.period}
+            onChange={(e) => setNewBudget(prev => ({ ...prev, period: e.target.value }))}
+            className="w-full p-2 mb-2 border rounded dark:bg-gray-700 dark:text-white"
+          >
+            <option value="weekly">{t('weekly')}</option>
+            <option value="monthly">{t('monthly')}</option>
+            <option value="perBatch">{t('perBatch')}</option>
+          </select>
+          <button type="submit" className="w-full bg-emerald-600 text-white py-2 rounded text-sm">
+            {t('addBudget')}
+          </button>
+        </form>
+      )}
+
+      <div className="space-y-2">
+        {budgets.map(b => (
+          <div key={b.id} className="bg-white dark:bg-gray-800 p-3 rounded shadow">
+            <div className="font-medium">{b.name}</div>
+            <div className="text-sm">{b.amount} ج.س • {t(b.period)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ExpenseForm({ newExpense, setNewExpense, handleSubmit, expenses }) {
+  const { t } = useTranslation();
+  const expenseTypes = [
+    { value: 'feed', label: t('feed') },
+    { value: 'vaccine', label: t('vaccines') },
+    { value: 'salary', label: t('salaries') },
+    { value: 'equipment', label: t('equipment') },
+    { value: 'other', label: t('other') }
+  ];
+
   return (
     <>
       <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-4">
@@ -156,7 +310,7 @@ function ExpenseForm({ newExpense, setNewExpense, expenseTypes, handleSubmit, ex
           <div>
             <label className="block text-sm mb-1">{t('amount')}</label>
             <input
-              type="text"
+              type="number"
               value={newExpense.amount}
               onChange={(e) => setNewExpense(prev => ({ ...prev, amount: e.target.value }))}
               placeholder="15000"
@@ -195,8 +349,14 @@ function ExpenseForm({ newExpense, setNewExpense, expenseTypes, handleSubmit, ex
   );
 }
 
-function SaleForm({ newSale, setNewSale, saleTypes, handleSubmit, sales }) {
+function SaleForm({ newSale, setNewSale, handleSubmit, sales }) {
   const { t } = useTranslation();
+  const saleTypes = [
+    { value: 'batch_sale', label: t('batchSale') },
+    { value: 'manure', label: t('manureSale') },
+    { value: 'other', label: t('other') }
+  ];
+
   return (
     <>
       <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-4">
@@ -224,7 +384,7 @@ function SaleForm({ newSale, setNewSale, saleTypes, handleSubmit, sales }) {
           <div>
             <label className="block text-sm mb-1">{t('amount')}</label>
             <input
-              type="text"
+              type="number"
               value={newSale.amount}
               onChange={(e) => setNewSale(prev => ({ ...prev, amount: e.target.value }))}
               placeholder="45000"
@@ -261,4 +421,4 @@ function SaleForm({ newSale, setNewSale, saleTypes, handleSubmit, sales }) {
       </div>
     </>
   );
-}
+    }
