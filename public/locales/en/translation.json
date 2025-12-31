@@ -18,4 +18,24 @@
   "recentRecords": "Recent Records",
   "noFeedRecords": "No feed records yet.",
   "feedRecordSaved": "Feed record saved successfully."
-} 
+  "waterManagement": "Water Management",
+  "totalWaterConsumed": "Total Water Consumed",
+  "addWaterRecord": "Add Water Record",
+  "unit": "Unit",
+  "liter": "Liter",
+  "gallon": "Gallon",
+  "barrel": "Barrel",
+  "waterRecordSaved": "Water record saved successfully.",
+  "noWaterRecords": "No water records yet.",
+  "environmentMonitoring": "Environment Monitoring",
+  "temperature": "Temperature",
+  "humidity": "Humidity",
+  "co2": "CO2",
+  "airSpeed": "Air Speed",
+  "temperatureC": "Temperature (°C)",
+  "humidityPercent": "Humidity (%)",
+  "co2Ppm": "CO2 (ppm)",
+  "airSpeedMs": "Air Speed (m/s)",
+  "turnOnVentilation": "Turn On Ventilation",
+  "setTargets": "Set Targets"
+}
