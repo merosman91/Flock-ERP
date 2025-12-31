@@ -20,6 +20,8 @@ function App() {
           <Route path="/flocks/:id" element={<FlockForm />} />
           <Route path="/flocks/:id" element={<FlockDetails />} />
           <Route path="/flocks/:id/feed" element={<FeedManagement />} />
+          <Route path="/flocks/:id/water" element={<WaterManagement />} />
+          <Route path="/flocks/:id/environment" element={<EnvironmentMonitoring />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
