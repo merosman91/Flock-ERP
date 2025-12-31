@@ -22,6 +22,8 @@ function App() {
           <Route path="/flocks/:id/feed" element={<FeedManagement />} />
           <Route path="/flocks/:id/water" element={<WaterManagement />} />
           <Route path="/flocks/:id/environment" element={<EnvironmentMonitoring />} />
+          <Route path="/flocks/:id/health" element={<HealthRecords />} />
+          <Route path="/reports" element={<Reports />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
