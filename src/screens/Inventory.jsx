@@ -10,7 +10,7 @@ export default function Inventory() {
     type: 'feed',
     quantity: '',
     unit: 'kg',
-    minThreshold: '10', // ⬅️ تنبيه عند الوصول لهذا الحد
+    minThreshold: '10',
     lastUpdated: new Date().toISOString()
   });
   const [editingId, setEditingId] = useState(null);
@@ -76,7 +76,7 @@ export default function Inventory() {
             <span className="text-2xl mr-2">⚠️</span>
             <div>
               <p className="font-bold">{t('lowStockAlert')}</p>
-              <ul className="list-disc list-inside mt-1">
+              <ul className="list-disc list-inside mt-1 text-sm">
                 {lowStockItems.map(item => (
                   <li key={item.id}>{item.name}: {item.quantity} {item.unit}</li>
                 ))}
@@ -103,7 +103,7 @@ export default function Inventory() {
             />
           </div>
           <div>
-            <label className="block text:sm mb-1">{t('type')}</label>
+            <label className="block text-sm mb-1">{t('type')}</label>
             <select
               value={newItem.type}
               onChange={(e) => setNewItem(prev => ({ ...prev, type: e.target.value }))}
@@ -205,4 +205,4 @@ export default function Inventory() {
       </div>
     </div>
   );
-}
+                                   }
