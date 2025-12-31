@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 import Notifications from './screens/Notifications';
 import Settings from './screens/Settings';
 import Finance from './screens/Finance';
+import Inventory from './screens/Inventory';
 
 export default App;
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/finance" element={<Finance />} />
+          <Route path="/inventory" element={<Inventory />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
