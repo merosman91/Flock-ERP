@@ -18,13 +18,12 @@ function App() {
           <Route path="/flocks" element={<FlockList />} />
           <Route path="/flocks/new" element={<FlockForm />} />
           <Route path="/flocks/:id" element={<FlockForm />} />
-          {/* سنضيف باقي المسارات لاحقًا */}
+          <Route path="/flocks/:id" element={<FlockDetails />} />
+          <Route path="/flocks/:id/feed" element={<FeedManagement />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
   );
 }
-
-
 
 export default App;
