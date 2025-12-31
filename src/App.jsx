@@ -5,6 +5,9 @@ import Dashboard from './screens/Dashboard';
 import FlockList from './screens/FlockList';
 import FlockForm from './screens/FlockForm';
 import { Suspense } from 'react';
+import Notifications from './screens/Notifications';
+import Settings from './screens/Settings';
+import Finance from './screens/Finance';
 
 export default App;
 function App() {
@@ -24,6 +27,9 @@ function App() {
           <Route path="/flocks/:id/environment" element={<EnvironmentMonitoring />} />
           <Route path="/flocks/:id/health" element={<HealthRecords />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/finance" element={<Finance />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
