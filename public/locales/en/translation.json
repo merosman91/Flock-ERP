@@ -23,4 +23,23 @@
   "cancel": "إلغاء",
   "save": "حفظ",
   "day": "يوم"
+  "back": "رجوع",
+  "breedInfo": "معلومات عن السلالة",
+  "breedNotFound": "لا توجد معلومات متاحة عن هذه السلالة.",
+  "healthRecords": "السجل الصحي",
+  "environment": "البيئة",
+  "avgWeight": "الوزن المتوسط",
+  "feedConsumed": "استهلاك العلف",
+  "loading": "جاري التحميل",
+  "feedManagement": "إدارة التغذية",
+  "totalFeedConsumed": "إجمالي العلف المستهلك",
+  "addFeedRecord": "إضافة سجل علف",
+  "date": "التاريخ",
+  "amountKg": "الكمية (كغ)",
+  "enterAmount": "أدخل الكمية",
+  "feedType": "نوع العلف",
+  "addRecord": "إضافة",
+  "recentRecords": "السجلات الحديثة",
+  "noFeedRecords": "لا توجد سجلات علف حتى الآن.",
+  "feedRecordSaved": "تم حفظ سجل العلف بنجاح."
 }
