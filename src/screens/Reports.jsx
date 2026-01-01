@@ -1,28 +1,27 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function Reports() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [period, setPeriod] = useState('weekly');
 
-  // Mock data
   const mockData = {
     daily: [
       { date: '2025-04-03', mortality: '0.8%', feed: '210 kg', water: '420 L', temp: '28°C' },
       { date: '2025-04-02', mortality: '1.0%', feed: '190 kg', water: '380 L', temp: '29°C' }
     ],
     weekly: [
-      { week: i18n.language === 'ar' ? 'الأسبوع 1' : 'Week 1', mortality: '1.2%', avgWeight: '0.45 kg', fcr: '1.45' },
-      { week: i18n.language === 'ar' ? 'الأسبوع 2' : 'Week 2', mortality: '0.9%', avgWeight: '1.10 kg', fcr: '1.52' }
+      { week: t('week') + ' 1', mortality: '1.2%', avgWeight: '0.45 kg', fcr: '1.45' },
+      { week: t('week') + ' 2', mortality: '0.9%', avgWeight: '1.10 kg', fcr: '1.52' }
     ],
     monthly: [
       { month: 'أبريل 2025', totalMortality: '2.1%', totalFeed: '2,800 kg', profit: '12,500 ج.س' }
     ]
   };
 
-  // ✅ توليد PDF باستخدام استيراد ديناميكي (آمن لـ Vercel)
   const generatePDF = async () => {
-    // تحميل المكتبات فقط في المتصفح
     const { jsPDF } = await import('jspdf');
     await import('jspdf-autotable');
 
@@ -33,7 +32,7 @@ export default function Reports() {
     });
 
     doc.setFont('Helvetica');
-    const title = i18n.language === 'ar' ? 'تقرير دواجني' : 'Dawajny Report';
+    const title = t('reportsTitle');
     doc.text(title, 20, 20);
 
     const data = period === 'daily' ? mockData.daily : 
@@ -60,10 +59,9 @@ export default function Reports() {
       body: rows,
       theme: 'grid',
       styles: { font: 'Helvetica', fontSize: 10 },
-      headStyles: { fillColor: [5, 150, 105] }
+      headStyles: { fillColor: [14, 165, 233] }
     });
 
-    // ✅ استخدام Blob + URL (بدون file-saver)
     const blob = doc.output('blob');
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -92,7 +90,14 @@ export default function Reports() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <h1 className="text-xl font-bold mb-4">{t('reportsTitle')}</h1>
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
+        <h1 className="text-xl font-bold">{t('reportsTitle')}</h1>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
       {/* Period Selector */}
       <div className="flex flex-wrap gap-2 mb-4">
@@ -102,7 +107,7 @@ export default function Reports() {
             onClick={() => setPeriod(p)}
             className={`px-4 py-2 rounded ${
               period === p 
-                ? 'bg-emerald-600 text-white' 
+                ? 'bg-primary-600 text-white' 
                 : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'
             }`}
           >
@@ -200,4 +205,4 @@ export default function Reports() {
       </div>
     </div>
   );
-      }
+                          }
