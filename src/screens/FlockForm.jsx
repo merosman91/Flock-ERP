@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { addFlock, getFlocks } from '../services/dbService';
 import { breeds } from '../utils/data';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function FlockForm() {
   const { t, i18n } = useTranslation();
@@ -22,8 +24,6 @@ export default function FlockForm() {
 
   useEffect(() => {
     if (isEdit) {
-      // In real app: fetch by ID
-      // For demo: load first flock
       const load = async () => {
         const flocks = await getFlocks();
         if (flocks.length > 0) {
@@ -47,9 +47,22 @@ export default function FlockForm() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <h1 className="text-xl font-bold mb-4">
-        {isEdit ? t('editBatch') : t('addBatch')}
-      </h1>
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
+        <button
+          onClick={() => navigate(-1)}
+          className="text-primary-600 dark:text-primary-400"
+        >
+          ← {t('back')}
+        </button>
+        <h1 className="text-xl font-bold">
+          {isEdit ? t('editBatch') : t('addBatch')}
+        </h1>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
       <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 p-4 rounded shadow space-y-4">
         <InputField
@@ -120,7 +133,7 @@ export default function FlockForm() {
           </button>
           <button
             type="submit"
-            className="bg-emerald-600 text-white px-6 py-2 rounded"
+            className="bg-primary-600 text-white px-6 py-2 rounded"
           >
             {t('save')}
           </button>
@@ -179,4 +192,4 @@ function TextareaField({ label, name, value, onChange }) {
       />
     </div>
   );
-}
+      }
