@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFlocks } from '../services/dbService';
 import { vaccines } from '../utils/data';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function HealthRecords() {
   const { t, i18n } = useTranslation();
@@ -25,7 +27,6 @@ export default function HealthRecords() {
       const found = flocks.find(f => f.id === parseInt(id));
       if (found) {
         setFlock(found);
-        // Mock health records
         setHealthRecords([
           { id: 1, date: '2025-03-28', type: 'vaccine', name: 'ND_Lasota', dose: '1 جرعة', notes: 'تم التطعيم عبر الشرب' },
           { id: 2, date: '2025-04-01', type: 'treatment', name: 'أنتي باكتيريا', dose: '5 مل/لتر', notes: 'لعلاج الإسهال' }
@@ -71,13 +72,17 @@ export default function HealthRecords() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <div className="flex justify-between items-center mb-4">
-        <button onClick={() => navigate(`/flocks/${id}`)} className="text-emerald-600 dark:text-emerald-400">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
+        <button onClick={() => navigate(`/flocks/${id}`)} className="text-primary-600 dark:text-primary-400">
           ← {t('back')}
         </button>
         <h1 className="text-xl font-bold">{t('healthRecordsTitle')}</h1>
-        <div className="w-8"></div>
-      </div>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
       {/* Add Record Form */}
       <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-4">
@@ -119,13 +124,13 @@ export default function HealthRecords() {
               <button
                 type="button"
                 onClick={() => toggleDescription(newRecord.name)}
-                className="text-xs text-blue-600 dark:text-blue-400 mt-1"
+                className="text-xs text-primary-600 dark:text-primary-400 mt-1"
               >
                 {showDescription === newRecord.name ? t('hideInfo') : t('showInfo')}
               </button>
             )}
             {showDescription === newRecord.name && (
-              <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded text-sm">
+              <div className="mt-2 p-2 bg-primary-50 dark:bg-primary-900/20 rounded text-sm">
                 {getDescription(newRecord.name) || t('noDescription')}
               </div>
             )}
@@ -168,7 +173,7 @@ export default function HealthRecords() {
                 <div className="flex justify-between">
                   <span className={`px-2 py-1 rounded text-xs ${
                     record.type === 'vaccine' 
-                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200' 
+                      ? 'bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-200' 
                       : 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200'
                   }`}>
                     {record.type === 'vaccine' ? t('vaccine') : t('treatment')}
@@ -189,4 +194,4 @@ export default function HealthRecords() {
       </div>
     </div>
   );
-}
+                }
