@@ -13,6 +13,7 @@ import {
   Legend
 } from 'chart.js';
 import { getFlocks } from '../services/dbService';
+import LanguageToggle from '../components/LanguageToggle';
 import ThemeToggle from '../components/ThemeToggle';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -39,8 +40,8 @@ export default function Dashboard() {
   const feedChart = {
     labels: days.map(d => `${t('day')} ${d}`),
     datasets: [{
-      label: t('dashboard.feed'),
-       feedData,
+      label: t('feedConsumed'),
+      data: feedData,
       borderColor: '#059669',
       backgroundColor: 'rgba(5, 150, 105, 0.1)',
       tension: 0.3
@@ -50,8 +51,8 @@ export default function Dashboard() {
   const tempChart = {
     labels: days.map(d => `${t('day')} ${d}`),
     datasets: [{
-      label: t('dashboard.avgTemp'),
-       tempData,
+      label: t('temperature'),
+      data: tempData,
       borderColor: '#dc2626',
       backgroundColor: 'rgba(220, 38, 38, 0.1)',
       tension: 0.3
@@ -61,8 +62,8 @@ export default function Dashboard() {
   const mortalityChart = {
     labels: days.map(d => `${t('day')} ${d}`),
     datasets: [{
-      label: t('dashboard.mortality'),
-       mortalityData,
+      label: t('totalMortality'),
+      data: mortalityData,
       borderColor: '#7c2d12',
       backgroundColor: 'rgba(124, 45, 18, 0.1)',
       tension: 0.3
@@ -85,24 +86,25 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold">{t('dashboard.title')}</h1>
+        <h1 className="text-xl font-bold">{t('dashboard')}</h1>
         <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
           <ThemeToggle />
         </div>
       </header>
 
       {/* KPIs */}
       <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <KpiCard title={t('dashboard.avgTemp')} value="28°C" color="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300" />
-        <KpiCard title={t('dashboard.humidity')} value="65%" color="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" />
-        <KpiCard title={t('dashboard.feed')} value="190 kg" color="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300" />
-        <KpiCard title={t('dashboard.mortality')} value="1.1%" color="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300" />
+        <KpiCard title={t('temperature')} value="28°C" color="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300" />
+        <KpiCard title={t('humidity')} value="65%" color="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" />
+        <KpiCard title={t('feedConsumed')} value="190 kg" color="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300" />
+        <KpiCard title={t('totalMortality')} value="1.1%" color="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300" />
       </div>
 
       {/* Active Batches */}
       <div className="px-4 mb-4">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="font-semibold">{t('dashboard.batches')}</h2>
+          <h2 className="font-semibold">{t('batches')}</h2>
           <button
             onClick={() => navigate('/flocks/new')}
             className="text-emerald-600 dark:text-emerald-400 text-sm"
@@ -134,9 +136,9 @@ export default function Dashboard() {
 
       {/* Charts */}
       <div className="px-4 space-y-6">
-        <ChartSection title={t('dashboard.feed')} data={feedChart} options={options} />
-        <ChartSection title={t('dashboard.avgTemp')} data={tempChart} options={options} />
-        <ChartSection title={t('dashboard.mortality')} data={mortalityChart} options={options} />
+        <ChartSection title={t('feedConsumed')} data={feedChart} options={options} />
+        <ChartSection title={t('temperature')} data={tempChart} options={options} />
+        <ChartSection title={t('totalMortality')} data={mortalityChart} options={options} />
       </div>
     </div>
   );
