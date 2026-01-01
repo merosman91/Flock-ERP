@@ -22,7 +22,7 @@
   "notes": "ملاحظات",
   "cancel": "إلغاء",
   "save": "حفظ",
-  "day": "يوم"
+  "day": "يوم",
   "back": "رجوع",
   "breedInfo": "معلومات عن السلالة",
   "breedNotFound": "لا توجد معلومات متاحة عن هذه السلالة.",
@@ -41,7 +41,7 @@
   "addRecord": "إضافة",
   "recentRecords": "السجلات الحديثة",
   "noFeedRecords": "لا توجد سجلات علف حتى الآن.",
-  "feedRecordSaved": "تم حفظ سجل العلف بنجاح."
+  "feedRecordSaved": "تم حفظ سجل العلف بنجاح.",
   "waterManagement": "إدارة المياه",
   "totalWaterConsumed": "إجمالي المياه المستهلكة",
   "addWaterRecord": "إضافة سجل مياه",
@@ -61,7 +61,7 @@
   "co2Ppm": "CO2 (ppm)",
   "airSpeedMs": "سرعة الهواء (م/ث)",
   "turnOnVentilation": "تشغيل التهوية",
-  "setTargets": "ضبط الأهداف"
+  "setTargets": "ضبط الأهداف",
   "healthRecordsTitle": "السجل الصحي",
   "addHealthRecord": "إضافة سجل صحي",
   "recordType": "نوع السجل",
@@ -94,7 +94,7 @@
   "totalFeed": "إجمالي العلف",
   "profit": "الربح",
   "avgWeight": "الوزن المتوسط",
-  "fcr": "كفاءة تحويل العلف"
+  "fcr": "كفاءة تحويل العلف",
   "notifications": "التنبيهات",
   "clearAll": "مسح الكل",
   "highTempAlert": "درجة حرارة مرتفعة في الحظيرة (31°C)",
@@ -138,7 +138,7 @@
   "addSale": "إضافة بيع",
   "saleType": "نوع البيع",
   "batchSale": "بيع دفعة",
-  "manureSale": "بيع الروث"
+  "manureSale": "بيع الروث",
   "inventoryManagement": "إدارة المخزون",
   "lowStockAlert": "تنبيه: مخزون منخفض!",
   "addItem": "إضافة صنف",
@@ -174,11 +174,14 @@
   "diseaseRiskAlert": "زيادة في درجة الحرارة والرطوبة قد تشير إلى خطر انتشار أمراض.",
   "activeAlerts": "التنبيهات النشطة",
   "feedRunningLow": "مخزون العلف سينفد خلال 3 أيام!",
-  "vaccinationDueSoon": "تطعيم ND_Lasota مستحق بعد يومين."
+  "vaccinationDueSoon": "تطعيم ND_Lasota مستحق بعد يومين.",
   "dashboard": "لوحة التحكم",
   "batches": "الدفعات",
   "inventory": "المخزون",
   "finance": "المالية",
   "reports": "التقارير",
-  "settings": "الإعدادات"
+  "settings": "الإعدادات",
+  "age": "العمر",
+  "mortalityRate": "معدل النفوق",
+  "medicine": "أدوية"
 }
