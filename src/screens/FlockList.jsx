@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { getFlocks, deleteFlock } from '../services/dbService';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function FlockList() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [flocks, setFlocks] = useState([]);
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all'); // all, active, completed
+  const [statusFilter, setStatusFilter] = useState('all');
 
   useEffect(() => {
     loadFlocks();
@@ -16,7 +18,6 @@ export default function FlockList() {
 
   const loadFlocks = async () => {
     const data = await getFlocks();
-    // Mock: add daysOld and status
     const enriched = data.map(f => ({
       ...f,
       daysOld: Math.floor((Date.now() - new Date(f.startDate).getTime()) / (1000 * 60 * 60 * 24)),
@@ -40,15 +41,14 @@ export default function FlockList() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold">{t('flockList.title')}</h1>
-        <button
-          onClick={() => navigate('/flocks/new')}
-          className="bg-emerald-600 text-white px-4 py-2 rounded"
-        >
-          + {t('addBatch')}
-        </button>
-      </div>
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
+        <h1 className="text-xl font-bold">{t('batches')}</h1>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
       {/* Filters */}
       <div className="mb-4 flex flex-wrap gap-2">
@@ -57,7 +57,7 @@ export default function FlockList() {
           placeholder={t('search')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="p-2 border rounded dark:bg-gray-800 dark:text-white"
+          className="p-2 border rounded dark:bg-gray-800 dark:text-white flex-1"
         />
         <select
           value={statusFilter}
@@ -81,13 +81,13 @@ export default function FlockList() {
               <div>
                 <div className="font-bold">{flock.name}</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {flock.breed} • {flock.daysOld} {t('days')} • {flock.status === 'active' ? t('active') : t('completed')}
+                  {flock.breed} • {flock.daysOld} {t('day')} • {flock.status === 'active' ? t('active') : t('completed')}
                 </div>
               </div>
               <div className="flex space-x-2 rtl:space-x-reverse">
                 <button
                   onClick={() => navigate(`/flocks/${flock.id}`)}
-                  className="text-blue-600 dark:text-blue-400"
+                  className="text-primary-600 dark:text-primary-400"
                 >
                   {t('view')}
                 </button>
@@ -108,4 +108,4 @@ export default function FlockList() {
       </div>
     </div>
   );
-}
+            }
