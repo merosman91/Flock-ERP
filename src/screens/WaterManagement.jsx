@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFlocks } from '../services/dbService';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function WaterManagement() {
   const { t } = useTranslation();
@@ -21,7 +23,6 @@ export default function WaterManagement() {
       const found = flocks.find(f => f.id === parseInt(id));
       if (found) {
         setFlock(found);
-        // Mock water logs
         setWaterLogs([
           { id: 1, date: '2025-04-01', amount: '240', unit: 'liter' },
           { id: 2, date: '2025-04-02', amount: '270', unit: 'liter' },
@@ -57,13 +58,17 @@ export default function WaterManagement() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <div className="flex justify-between items-center mb-4">
-        <button onClick={() => navigate(`/flocks/${id}`)} className="text-emerald-600 dark:text-emerald-400">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
+        <button onClick={() => navigate(`/flocks/${id}`)} className="text-primary-600 dark:text-primary-400">
           ← {t('back')}
         </button>
         <h1 className="text-xl font-bold">{t('waterManagement')}</h1>
-        <div className="w-8"></div>
-      </div>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
       {/* Summary */}
       <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-4">
@@ -141,4 +146,4 @@ export default function WaterManagement() {
       </div>
     </div>
   );
-}
+    } 
