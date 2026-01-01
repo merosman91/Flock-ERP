@@ -1,8 +1,5 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { saveAs } from 'file-saver';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 
 export default function Reports() {
   const { t, i18n } = useTranslation();
@@ -15,24 +12,29 @@ export default function Reports() {
       { date: '2025-04-02', mortality: '1.0%', feed: '190 kg', water: '380 L', temp: '29°C' }
     ],
     weekly: [
-      { week: 'الأسبوع 1', mortality: '1.2%', avgWeight: '0.45 kg', fcr: '1.45' },
-      { week: 'الأسبوع 2', mortality: '0.9%', avgWeight: '1.10 kg', fcr: '1.52' }
+      { week: i18n.language === 'ar' ? 'الأسبوع 1' : 'Week 1', mortality: '1.2%', avgWeight: '0.45 kg', fcr: '1.45' },
+      { week: i18n.language === 'ar' ? 'الأسبوع 2' : 'Week 2', mortality: '0.9%', avgWeight: '1.10 kg', fcr: '1.52' }
     ],
     monthly: [
       { month: 'أبريل 2025', totalMortality: '2.1%', totalFeed: '2,800 kg', profit: '12,500 ج.س' }
     ]
   };
 
-  const generatePDF = () => {
+  // ✅ توليد PDF باستخدام استيراد ديناميكي (آمن لـ Vercel)
+  const generatePDF = async () => {
+    // تحميل المكتبات فقط في المتصفح
+    const { jsPDF } = await import('jspdf');
+    await import('jspdf-autotable');
+
     const doc = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
       format: 'a4'
     });
 
-    // Set Arabic font support (simplified - in real app use a proper Arabic font)
     doc.setFont('Helvetica');
-    doc.text(t('reportsTitle'), 20, 20);
+    const title = i18n.language === 'ar' ? 'تقرير دواجني' : 'Dawajny Report';
+    doc.text(title, 20, 20);
 
     const data = period === 'daily' ? mockData.daily : 
                 period === 'weekly' ? mockData.weekly : mockData.monthly;
@@ -61,7 +63,16 @@ export default function Reports() {
       headStyles: { fillColor: [5, 150, 105] }
     });
 
-    doc.save(`Dawajny_Report_${period}_${new Date().toISOString().slice(0, 10)}.pdf`);
+    // ✅ استخدام Blob + URL (بدون file-saver)
+    const blob = doc.output('blob');
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Dawajny_Report_${period}_${new Date().toISOString().slice(0, 10)}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const shareViaWhatsApp = () => {
@@ -189,4 +200,4 @@ export default function Reports() {
       </div>
     </div>
   );
-}
+      }
