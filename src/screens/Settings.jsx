@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../hooks/useTheme';
 import i18n from '../i18n/i18n';
+import { useTheme } from '../hooks/useTheme';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function Settings() {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
-  const [language, setLanguage] = useState(localStorage.getItem('i18nextLng')?.split('-')[0] || 'ar');
+  const [language, setLanguage] = useState(i18n.language);
   const [weightUnit, setWeightUnit] = useState(localStorage.getItem('weightUnit') || 'kg');
   const [currency, setCurrency] = useState(localStorage.getItem('currency') || 'SDG');
 
@@ -24,8 +26,9 @@ export default function Settings() {
   ];
 
   useEffect(() => {
-    i18n.changeLanguage(language);
-    localStorage.setItem('i18nextLng', language);
+    if (language !== i18n.language) {
+      i18n.changeLanguage(language);
+    }
   }, [language]);
 
   const handleWeightUnitChange = (e) => {
@@ -68,7 +71,6 @@ export default function Settings() {
           setCurrency(data.settings.currency);
           localStorage.setItem('weightUnit', data.settings.weightUnit);
           localStorage.setItem('currency', data.settings.currency);
-          // Theme handled separately
           alert(t('dataImported'));
         }
       } catch (err) {
@@ -80,7 +82,14 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <h1 className="text-xl font-bold mb-6">{t('settings')}</h1>
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-6">
+        <h1 className="text-xl font-bold">{t('settings')}</h1>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
       {/* General */}
       <Section title={t('general')}>
@@ -140,7 +149,7 @@ export default function Settings() {
         <div className="space-y-3">
           <button
             onClick={exportData}
-            className="w-full bg-emerald-600 text-white py-2 rounded"
+            className="w-full bg-primary-600 text-white py-2 rounded"
           >
             📤 {t('exportData')}
           </button>
@@ -175,4 +184,4 @@ function SettingRow({ label, children }) {
       <div className="w-1/2">{children}</div>
     </div>
   );
-}
+      }
