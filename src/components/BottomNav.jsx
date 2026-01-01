@@ -25,7 +25,7 @@ export default function BottomNav() {
 
   return (
     <div 
-      className={`fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 ${
+      className={`fixed bottom-0 left-0 right 0 z-10 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 ${
         i18n.language === 'ar' ? 'rtl' : 'ltr'
       }`}
       style={{ direction: i18n.language === 'ar' ? 'rtl' : 'ltr' }}
