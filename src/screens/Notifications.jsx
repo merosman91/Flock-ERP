@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function Notifications() {
   const { t } = useTranslation();
@@ -29,7 +31,7 @@ export default function Notifications() {
   const getBadgeColor = (type) => {
     switch (type) {
       case 'environment': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200';
-      case 'feed': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200';
+      case 'feed': return 'bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-200';
       case 'health': return 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200';
       case 'mortality': return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
@@ -44,16 +46,14 @@ export default function Notifications() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <div className="flex justify-between items-center mb-4">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
         <h1 className="text-xl font-bold">{t('notifications')}</h1>
-        <button
-          onClick={clearAll}
-          disabled={notifications.length === 0}
-          className="text-red-600 dark:text-red-400 disabled:opacity-50"
-        >
-          {t('clearAll')}
-        </button>
-      </div>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2 mb-4">
