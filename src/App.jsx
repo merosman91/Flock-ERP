@@ -14,34 +14,34 @@ import Notifications from './screens/Notifications';
 import Settings from './screens/Settings';
 import Finance from './screens/Finance';
 import Inventory from './screens/Inventory';
-import Layout from './components/Layout'; // ⬅️ جديد
+import Layout from './components/Layout';
 import { Suspense } from 'react';
 
-// مكون يلف الشاشات التي تحتاج Layout
 const WithLayout = ({ children }) => <Layout>{children}</Layout>;
 
 function App() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<div className="p-4 text-center">جاري التحميل...</div>}>
+      <Suspense fallback={<div className="p-4 text-center text-gray-500">جاري التحميل...</div>}>
         <Routes>
+          {/* بدون Layout */}
           <Route path="/" element={<SplashScreen />} />
           <Route path="/login" element={<Login />} />
-          
-          {/* الشاشات التي تستخدم Layout */}
-          <Route path="/dashboard" element={<WithLayout><Dashboard /></WithLayout>} />
-          <Route path="/flocks" element={<WithLayout><FlockList /></WithLayout>} />
           <Route path="/flocks/new" element={<FlockForm />} />
           <Route path="/flocks/:id" element={<FlockDetails />} />
           <Route path="/flocks/:id/feed" element={<FeedManagement />} />
           <Route path="/flocks/:id/water" element={<WaterManagement />} />
           <Route path="/flocks/:id/environment" element={<EnvironmentMonitoring />} />
           <Route path="/flocks/:id/health" element={<HealthRecords />} />
-          <Route path="/reports" element={<WithLayout><Reports /></WithLayout>} />
           <Route path="/notifications" element={<Notifications />} />
-          <Route path="/settings" element={<WithLayout><Settings /></WithLayout>} />
-          <Route path="/finance" element={<WithLayout><Finance /></WithLayout>} />
+
+          {/* مع Layout */}
+          <Route path="/dashboard" element={<WithLayout><Dashboard /></WithLayout>} />
+          <Route path="/flocks" element={<WithLayout><FlockList /></WithLayout>} />
           <Route path="/inventory" element={<WithLayout><Inventory /></WithLayout>} />
+          <Route path="/finance" element={<WithLayout><Finance /></WithLayout>} />
+          <Route path="/reports" element={<WithLayout><Reports /></WithLayout>} />
+          <Route path="/settings" element={<WithLayout><Settings /></WithLayout>} />
         </Routes>
       </Suspense>
     </BrowserRouter>
