@@ -1,3 +1,4 @@
+// src/screens/SplashScreen.jsx
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +15,6 @@ export default function SplashScreen() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-800 dark:to-gray-900">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl mb-6">
-        {/* أيقونة احترافية */}
         <div className="w-24 h-24 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
           <span className="text-4xl">🐔</span>
         </div>
@@ -30,4 +30,4 @@ export default function SplashScreen() {
       </div>
     </div>
   );
-    }
+}
