@@ -13,6 +13,8 @@ import {
   Legend
 } from 'chart.js';
 import { getFlocks } from '../services/dbService';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -31,7 +33,6 @@ export default function EnvironmentMonitoring() {
     loadFlock();
   }, [id]);
 
-  // Mock environmental data for last 7 days
   const days = Array.from({ length: 7 }, (_, i) => i + 1);
   const tempData = [28, 29, 27, 30, 31, 29, 28];
   const humidityData = [65, 63, 67, 62, 60, 64, 66];
@@ -76,8 +77,8 @@ export default function EnvironmentMonitoring() {
     datasets: [{
       label: t('airSpeedMs'),
       data: airSpeedData,
-      borderColor: '#059669',
-      backgroundColor: 'rgba(5, 150, 105, 0.1)',
+      borderColor: '#0ea5e9',
+      backgroundColor: 'rgba(14, 165, 233, 0.1)',
       tension: 0.3
     }]
   };
@@ -100,20 +101,24 @@ export default function EnvironmentMonitoring() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <div className="flex justify-between items-center mb-4">
-        <button onClick={() => navigate(`/flocks/${id}`)} className="text-emerald-600 dark:text-emerald-400">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
+        <button onClick={() => navigate(`/flocks/${id}`)} className="text-primary-600 dark:text-primary-400">
           ← {t('back')}
         </button>
         <h1 className="text-xl font-bold">{t('environmentMonitoring')}</h1>
-        <div className="w-8"></div>
-      </div>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
       {/* Current Readings */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         <ReadingCard label={t('temperature')} value="28°C" color="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300" />
         <ReadingCard label={t('humidity')} value="65%" color="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" />
         <ReadingCard label={t('co2')} value="1200 ppm" color="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300" />
-        <ReadingCard label={t('airSpeed')} value="1.2 m/s" color="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300" />
+        <ReadingCard label={t('airSpeed')} value="1.2 m/s" color="bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300" />
       </div>
 
       {/* Charts */}
@@ -126,7 +131,7 @@ export default function EnvironmentMonitoring() {
 
       {/* Control Buttons */}
       <div className="mt-6 grid grid-cols-2 gap-3">
-        <button className="bg-emerald-600 text-white py-3 rounded shadow">
+        <button className="bg-primary-600 text-white py-3 rounded shadow">
           {t('turnOnVentilation')}
         </button>
         <button className="bg-amber-600 text-white py-3 rounded shadow">
@@ -155,4 +160,4 @@ function ChartSection({ title, data, options }) {
       </div>
     </div>
   );
-}
+        }
