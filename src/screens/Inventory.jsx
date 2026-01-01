@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { addInventoryItem, getInventory, updateInventoryQuantity } from '../services/dbService';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function Inventory() {
   const { t } = useTranslation();
@@ -67,9 +69,16 @@ export default function Inventory() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <h1 className="text-xl font-bold mb-4">{t('inventoryManagement')}</h1>
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
+        <h1 className="text-xl font-bold">{t('inventoryManagement')}</h1>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
-      {/* تنبيهات المخزون المنخفض */}
+      {/* Low Stock Alerts */}
       {lowStockItems.length > 0 && (
         <div className="bg-amber-100 dark:bg-amber-900/30 border-l-4 border-amber-500 p-4 mb-4 rounded">
           <div className="flex items-start">
@@ -86,7 +95,7 @@ export default function Inventory() {
         </div>
       )}
 
-      {/* نموذج إضافة/تعديل */}
+      {/* Add/Update Form */}
       <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-6">
         <h2 className="font-bold mb-3">
           {editingId ? t('editItem') : t('addItem')}
@@ -150,7 +159,7 @@ export default function Inventory() {
           </div>
           <button
             type="submit"
-            className="w-full bg-emerald-600 text-white py-2 rounded"
+            className="w-full bg-primary-600 text-white py-2 rounded"
           >
             {editingId ? t('update') : t('add')}
           </button>
@@ -175,7 +184,7 @@ export default function Inventory() {
         </form>
       </div>
 
-      {/* قائمة المخزون */}
+      {/* Inventory List */}
       <div>
         <h2 className="font-bold mb-2">{t('currentStock')}</h2>
         <div className="space-y-2">
@@ -190,7 +199,7 @@ export default function Inventory() {
                 </div>
                 <button
                   onClick={() => startEdit(item)}
-                  className="text-emerald-600 dark:text-emerald-400"
+                  className="text-primary-600 dark:text-primary-400"
                 >
                   ✏️
                 </button>
@@ -205,4 +214,4 @@ export default function Inventory() {
       </div>
     </div>
   );
-                                   }
+                }
