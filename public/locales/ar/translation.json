@@ -175,4 +175,10 @@
   "activeAlerts": "التنبيهات النشطة",
   "feedRunningLow": "مخزون العلف سينفد خلال 3 أيام!",
   "vaccinationDueSoon": "تطعيم ND_Lasota مستحق بعد يومين."
-} 
+  "dashboard": "لوحة التحكم",
+  "batches": "الدفعات",
+  "inventory": "المخزون",
+  "finance": "المالية",
+  "reports": "التقارير",
+  "settings": "الإعدادات"
+}
