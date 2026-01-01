@@ -151,4 +151,10 @@
   "activeAlerts": "Active Alerts",
   "feedRunningLow": "Feed stock will run out in 3 days!",
   "vaccinationDueSoon": "ND_Lasota vaccination is due in 2 days."
+  "dashboard": "Dashboard",
+  "batches": "Batches",
+  "inventory": "Inventory",
+  "finance": "Finance",
+  "reports": "Reports",
+  "settings": "Settings"
 } 
