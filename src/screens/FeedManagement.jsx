@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFlocks } from '../services/dbService';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function FeedManagement() {
   const { t } = useTranslation();
@@ -21,8 +23,6 @@ export default function FeedManagement() {
       const found = flocks.find(f => f.id === parseInt(id));
       if (found) {
         setFlock(found);
-        // In real app: load feed logs from DB
-        // For demo: mock data
         setFeedLogs([
           { id: 1, date: '2025-04-01', amount: '120', type: 'علف نمو' },
           { id: 2, date: '2025-04-02', amount: '135', type: 'علف نمو' },
@@ -47,7 +47,6 @@ export default function FeedManagement() {
       amount: '',
       type: 'علف نمو'
     });
-    // In real app: save to IndexedDB
     alert(t('feedRecordSaved'));
   };
 
@@ -59,19 +58,23 @@ export default function FeedManagement() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <div className="flex justify-between items-center mb-4">
-        <button onClick={() => navigate(`/flocks/${id}`)} className="text-emerald-600 dark:text-emerald-400">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
+        <button onClick={() => navigate(`/flocks/${id}`)} className="text-primary-600 dark:text-primary-400">
           ← {t('back')}
         </button>
         <h1 className="text-xl font-bold">{t('feedManagement')}</h1>
-        <div className="w-8"></div>
-      </div>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
       {/* Summary */}
       <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-4">
         <div className="text-center">
           <div className="text-sm text-gray-500 dark:text-gray-400">{t('totalFeedConsumed')}</div>
-          <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-400">{totalFeed} kg</div>
+          <div className="text-2xl font-bold text-primary-700 dark:text-primary-400">{totalFeed} kg</div>
         </div>
       </div>
 
@@ -107,14 +110,14 @@ export default function FeedManagement() {
               onChange={(e) => setNewLog(prev => ({ ...prev, type: e.target.value }))}
               className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
             >
-              <option value="علف فرخ">علف فرخ</option>
-              <option value="علف نمو">علف نمو</option>
-              <option value="علف تسمين">علف تسمين</option>
+              <option value="علف فرخ">{t('feedType')} - فرخ</option>
+              <option value="علف نمو">{t('feedType')} - نمو</option>
+              <option value="علف تسمين">{t('feedType')} - تسمين</option>
             </select>
           </div>
           <button
             type="submit"
-            className="w-full bg-emerald-600 text-white py-2 rounded"
+            className="w-full bg-primary-600 text-white py-2 rounded"
           >
             {t('addRecord')}
           </button>
