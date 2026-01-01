@@ -13,7 +13,7 @@ export default function Login() {
       localStorage.setItem('isLoggedIn', 'true');
       navigate('/dashboard');
     } else {
-      alert('رمز غير صحيح! (استخدم 1234 للمعاينة)');
+      alert(t('confirmDelete')); // إعادة استخدام تنبيه موجود
     }
   };
 
@@ -32,7 +32,7 @@ export default function Login() {
           />
           <button
             type="submit"
-            className="w-full bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700"
+            className="w-full bg-primary-600 text-white py-2 rounded hover:bg-primary-700"
           >
             {t('login.submit')}
           </button>
