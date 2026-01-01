@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { addExpense, getExpenses, addSale, getSales, addBudget, getBudgets } from '../services/dbService';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function Finance() {
   const { t } = useTranslation();
@@ -82,7 +84,6 @@ export default function Finance() {
     alert(t('budgetAdded'));
   };
 
-  // ✅ حسابات مالية متقدمة
   const totalExpenses = expenses.reduce((sum, exp) => sum + parseFloat(exp.amount || 0), 0);
   const totalSales = sales.reduce((sum, sale) => sum + parseFloat(sale.amount || 0), 0);
   const profit = totalSales - totalExpenses;
@@ -98,9 +99,16 @@ export default function Finance() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <h1 className="text-xl font-bold mb-4">{t('advancedFinance')}</h1>
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
+        <h1 className="text-xl font-bold">{t('advancedFinance')}</h1>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
-      {/* لوحة التحليل المالي */}
+      {/* Financial Overview */}
       {activeTab === 'overview' && (
         <div className="space-y-4 mb-6">
           <div className="grid grid-cols-2 gap-2">
@@ -123,7 +131,7 @@ export default function Finance() {
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
                 <div 
-                  className="bg-emerald-600 h-2 rounded-full" 
+                  className="bg-primary-600 h-2 rounded-full" 
                   style={{ width: `${Math.min(budgetUtilization, 100)}%` }}
                 ></div>
               </div>
@@ -132,12 +140,12 @@ export default function Finance() {
         </div>
       )}
 
-      {/* علامات التبويب */}
+      {/* Tabs */}
       <div className="flex mb-4 overflow-x-auto whitespace-nowrap">
         <button
           className={`px-4 py-2 font-medium ${
             activeTab === 'overview' 
-              ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600' 
+              ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600' 
               : 'text-gray-500 dark:text-gray-400'
           }`}
           onClick={() => setActiveTab('overview')}
@@ -147,7 +155,7 @@ export default function Finance() {
         <button
           className={`px-4 py-2 font-medium ${
             activeTab === 'expenses' 
-              ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600' 
+              ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600' 
               : 'text-gray-500 dark:text-gray-400'
           }`}
           onClick={() => setActiveTab('expenses')}
@@ -157,7 +165,7 @@ export default function Finance() {
         <button
           className={`px-4 py-2 font-medium ${
             activeTab === 'sales' 
-              ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600' 
+              ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600' 
               : 'text-gray-500 dark:text-gray-400'
           }`}
           onClick={() => setActiveTab('sales')}
@@ -167,7 +175,7 @@ export default function Finance() {
         <button
           className={`px-4 py-2 font-medium ${
             activeTab === 'budget' 
-              ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600' 
+              ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600' 
               : 'text-gray-500 dark:text-gray-400'
           }`}
           onClick={() => setActiveTab('budget')}
@@ -176,7 +184,7 @@ export default function Finance() {
         </button>
       </div>
 
-      {/* محتوى التبويبات */}
+      {/* Tab Content */}
       {activeTab === 'budget' ? (
         <BudgetSection 
           budgets={budgets} 
@@ -222,7 +230,7 @@ function BudgetSection({ budgets, newBudget, setNewBudget, handleAddBudget }) {
         <h2 className="font-bold">{t('budgetManagement')}</h2>
         <button 
           onClick={() => setAdding(!adding)}
-          className="text-emerald-600 dark:text-emerald-400 text-sm"
+          className="text-primary-600 dark:text-primary-400 text-sm"
         >
           {adding ? t('cancel') : `+ ${t('addBudget')}`}
         </button>
@@ -255,7 +263,7 @@ function BudgetSection({ budgets, newBudget, setNewBudget, handleAddBudget }) {
             <option value="monthly">{t('monthly')}</option>
             <option value="perBatch">{t('perBatch')}</option>
           </select>
-          <button type="submit" className="w-full bg-emerald-600 text-white py-2 rounded text-sm">
+          <button type="submit" className="w-full bg-primary-600 text-white py-2 rounded text-sm">
             {t('addBudget')}
           </button>
         </form>
