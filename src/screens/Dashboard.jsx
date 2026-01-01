@@ -31,7 +31,6 @@ export default function Dashboard() {
     loadFlocks();
   }, []);
 
-  // Mock Data for Charts (In real app, pull from DB)
   const days = Array.from({ length: 7 }, (_, i) => i + 1);
   const feedData = [120, 135, 150, 160, 175, 190, 210];
   const tempData = [28, 29, 27, 30, 31, 29, 28];
@@ -41,9 +40,9 @@ export default function Dashboard() {
     labels: days.map(d => `${t('day')} ${d}`),
     datasets: [{
       label: t('feedConsumed'),
-      data: feedData,
-      borderColor: '#059669',
-      backgroundColor: 'rgba(5, 150, 105, 0.1)',
+       feedData,
+      borderColor: '#0ea5e9',
+      backgroundColor: 'rgba(14, 165, 233, 0.1)',
       tension: 0.3
     }]
   };
@@ -52,7 +51,7 @@ export default function Dashboard() {
     labels: days.map(d => `${t('day')} ${d}`),
     datasets: [{
       label: t('temperature'),
-      data: tempData,
+       tempData,
       borderColor: '#dc2626',
       backgroundColor: 'rgba(220, 38, 38, 0.1)',
       tension: 0.3
@@ -62,8 +61,8 @@ export default function Dashboard() {
   const mortalityChart = {
     labels: days.map(d => `${t('day')} ${d}`),
     datasets: [{
-      label: t('totalMortality'),
-      data: mortalityData,
+      label: t('mortalityRate'),
+       mortalityData,
       borderColor: '#7c2d12',
       backgroundColor: 'rgba(124, 45, 18, 0.1)',
       tension: 0.3
@@ -83,7 +82,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center">
         <h1 className="text-xl font-bold">{t('dashboard')}</h1>
@@ -97,8 +96,8 @@ export default function Dashboard() {
       <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
         <KpiCard title={t('temperature')} value="28°C" color="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300" />
         <KpiCard title={t('humidity')} value="65%" color="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" />
-        <KpiCard title={t('feedConsumed')} value="190 kg" color="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300" />
-        <KpiCard title={t('totalMortality')} value="1.1%" color="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300" />
+        <KpiCard title={t('feedConsumed')} value="190 kg" color="bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300" />
+        <KpiCard title={t('mortalityRate')} value="1.1%" color="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300" />
       </div>
 
       {/* Active Batches */}
@@ -107,9 +106,9 @@ export default function Dashboard() {
           <h2 className="font-semibold">{t('batches')}</h2>
           <button
             onClick={() => navigate('/flocks/new')}
-            className="text-emerald-600 dark:text-emerald-400 text-sm"
+            className="text-primary-600 dark:text-primary-400 text-sm"
           >
-            + {t('add')}
+            + {t('addBatch')}
           </button>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-lg p-3 shadow">
@@ -122,7 +121,7 @@ export default function Dashboard() {
               >
                 <div className="font-medium">{flock.name}</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {flock.breed} • {flock.daysOld} {t('days')}
+                  {flock.breed} • {flock.daysOld} {t('day')}
                 </div>
               </div>
             ))
@@ -138,7 +137,7 @@ export default function Dashboard() {
       <div className="px-4 space-y-6">
         <ChartSection title={t('feedConsumed')} data={feedChart} options={options} />
         <ChartSection title={t('temperature')} data={tempChart} options={options} />
-        <ChartSection title={t('totalMortality')} data={mortalityChart} options={options} />
+        <ChartSection title={t('mortalityRate')} data={mortalityChart} options={options} />
       </div>
     </div>
   );
@@ -162,4 +161,4 @@ function ChartSection({ title, data, options }) {
       </div>
     </div>
   );
-}
+                          }
