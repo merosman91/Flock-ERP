@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFlocks } from '../services/dbService';
 import { breeds } from '../utils/data';
+import LanguageToggle from '../components/LanguageToggle';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function FlockDetails() {
   const { t, i18n } = useTranslation();
@@ -18,7 +20,6 @@ export default function FlockDetails() {
       if (found) {
         const daysOld = Math.floor((Date.now() - new Date(found.startDate).getTime()) / (1000 * 60 * 60 * 24));
         setFlock({ ...found, daysOld });
-        // Load breed description
         const desc = i18n.language === 'ar' ? breeds.ar[found.breed] : breeds.en[found.breed];
         setBreedDescription(desc || t('breedNotFound'));
       }
@@ -34,27 +35,29 @@ export default function FlockDetails() {
     );
   }
 
-  // Mock KPIs (in real app: calculate from feed/health records)
-  const avgWeight = (flock.daysOld * 0.05 + (flock.initialWeight || 0.04)).toFixed(2); // simplified
+  const avgWeight = (flock.daysOld * 0.05 + (flock.initialWeight || 0.04)).toFixed(2);
   const feedConsumed = (flock.daysOld * 0.15 * flock.count).toFixed(1);
   const mortalityRate = (Math.random() * 1.5).toFixed(1);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <button onClick={() => navigate(-1)} className="text-emerald-600 dark:text-emerald-400">
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
+        <button onClick={() => navigate(-1)} className="text-primary-600 dark:text-primary-400">
           ← {t('back')}
         </button>
         <h1 className="text-xl font-bold text-center flex-1">{flock.name}</h1>
-        <div className="w-8"></div> {/* Spacer for alignment */}
-      </div>
+        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+      </header>
 
       {/* General Info */}
       <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-4">
         <div className="grid grid-cols-2 gap-2 text-sm">
           <InfoRow label={t('breed')} value={flock.breed} />
-          <InfoRow label={t('age')} value={`${flock.daysOld} ${t('days')}`} />
+          <InfoRow label={t('age')} value={`${flock.daysOld} ${t('day')}`} />
           <InfoRow label={t('birdCount')} value={flock.count.toLocaleString()} />
           <InfoRow label={t('startDate')} value={new Date(flock.startDate).toLocaleDateString('ar-SD')} />
         </div>
@@ -108,7 +111,7 @@ function InfoRow({ label, value }) {
 
 function KpiCard({ label, value }) {
   return (
-    <div className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 text-center p-3 rounded">
+    <div className="bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-center p-3 rounded">
       <div className="text-xs">{label}</div>
       <div className="text-lg font-bold mt-1">{value}</div>
     </div>
@@ -125,4 +128,4 @@ function ActionButton({ label, icon, onClick }) {
       <div className="text-sm">{label}</div>
     </button>
   );
-}
+                                   }
