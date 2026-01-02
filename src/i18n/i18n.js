@@ -1,5 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import ar from '../locales/ar/translation';
+import en from '../locales/en/translation';
 
 const savedLang = localStorage.getItem('i18nextLng') || 'ar';
 
@@ -8,43 +10,22 @@ i18n
   .init({
     lng: savedLang,
     fallbackLng: 'ar',
-    interpolation: { escapeValue: false },
+    interpolation: {
+      escapeValue: false // not needed for react
+    },
     resources: {
       ar: {
-        translation: {
-          // الترجمات الأساسية
-          "dashboard": "لوحة التحكم",
-          "batches": "الدفعات",
-          "inventory": "المخزون",
-          "finance": "المالية",
-          "reports": "التقارير",
-          "settings": "الإعدادات",
-          "notifications": "التنبيهات",
-          "arabic": "العربية",
-          "english": "الإنجليزية",
-          "language": "اللغة"
-        }
+        translation: ar
       },
       en: {
-        translation: {
-          "dashboard": "Dashboard",
-          "batches": "Batches",
-          "inventory": "Inventory",
-          "finance": "Finance",
-          "reports": "Reports",
-          "settings": "Settings",
-          "notifications": "Notifications",
-          "arabic": "Arabic",
-          "english": "English",
-          "language": "Language"
-        }
+        translation: en
       }
     }
   });
 
+// عند تغيير اللغة، احفظها وغيّر اتجاه الصفحة
 i18n.on('languageChanged', (lng) => {
   localStorage.setItem('i18nextLng', lng);
-  // إعادة تحميل اتجاه الصفحة
   document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
   document.documentElement.lang = lng;
 });
