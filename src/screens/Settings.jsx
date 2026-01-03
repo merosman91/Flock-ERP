@@ -11,18 +11,21 @@ export default function Settings() {
   const [language, setLanguage] = useState(i18n.language);
   const [weightUnit, setWeightUnit] = useState(localStorage.getItem('weightUnit') || 'kg');
   const [currency, setCurrency] = useState(localStorage.getItem('currency') || 'SDG');
+  const [version] = useState('1.2.0');
 
   const weightUnits = [
     { value: 'kg', label: t('kilogram') },
     { value: 'ton', label: t('ton') },
     { value: 'qintar', label: t('qintar') },
-    { value: 'carat', label: t('carat') }
+    { value: 'carat', label: t('carat') },
+    { value: 'sack', label: 'جوال' }
   ];
 
   const currencies = [
     { value: 'SDG', label: 'جنيه سوداني (ج.س)' },
     { value: 'USD', label: 'دولار أمريكي ($)' },
-    { value: 'SAR', label: 'ريال سعودي (ر.س)' }
+    { value: 'SAR', label: 'ريال سعودي (ر.س)' },
+    { value: 'EGP', label: 'جنيه مصري (ج.م)' }
   ];
 
   useEffect(() => {
@@ -46,13 +49,14 @@ export default function Settings() {
   const exportData = () => {
     const data = {
       settings: { language, weightUnit, currency, theme },
+      version,
       timestamp: new Date().toISOString()
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'dawajny_backup.json';
+    a.download = `dawajny_backup_v${version}.json`;
     a.click();
     URL.revokeObjectURL(url);
     alert(t('dataExported'));
@@ -83,9 +87,11 @@ export default function Settings() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-6">
-        <h1 className="text-xl font-bold">{t('settings')}</h1>
-        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-xl mb-6">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">
+          {t('settings')}
+        </h1>
+        <div className="flex items-center space-x-3 rtl:space-x-reverse">
           <LanguageToggle />
           <ThemeToggle />
         </div>
@@ -97,7 +103,7 @@ export default function Settings() {
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+            className="p-3 border rounded-lg dark:bg-gray-700 dark:text-white w-full focus:ring-2 focus:ring-primary-500"
           >
             <option value="ar">{t('arabic')}</option>
             <option value="en">{t('english')}</option>
@@ -107,7 +113,7 @@ export default function Settings() {
         <SettingRow label={t('theme')}>
           <button
             onClick={toggleTheme}
-            className="w-full p-2 bg-gray-200 dark:bg-gray-700 rounded text-center"
+            className="w-full p-3 bg-gray-100 dark:bg-gray-700 rounded-lg text-center font-medium transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
           >
             {theme === 'dark' ? t('darkMode') : t('lightMode')}
           </button>
@@ -120,7 +126,7 @@ export default function Settings() {
           <select
             value={weightUnit}
             onChange={handleWeightUnitChange}
-            className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+            className="p-3 border rounded-lg dark:bg-gray-700 dark:text-white w-full focus:ring-2 focus:ring-primary-500"
           >
             {weightUnits.map(u => (
               <option key={u.value} value={u.value}>{u.label}</option>
@@ -135,7 +141,7 @@ export default function Settings() {
           <select
             value={currency}
             onChange={handleCurrencyChange}
-            className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+            className="p-3 border rounded-lg dark:bg-gray-700 dark:text-white w-full focus:ring-2 focus:ring-primary-500"
           >
             {currencies.map(c => (
               <option key={c.value} value={c.value}>{c.label}</option>
@@ -146,14 +152,14 @@ export default function Settings() {
 
       {/* Backup */}
       <Section title={t('backup')}>
-        <div className="space-y-3">
+        <div className="space-y-4">
           <button
             onClick={exportData}
-            className="w-full bg-primary-600 text-white py-2 rounded"
+            className="w-full bg-gradient-to-r from-primary-600 to-primary-500 text-white py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-shadow"
           >
             📤 {t('exportData')}
           </button>
-          <label className="w-full bg-amber-600 text-white py-2 rounded text-center cursor-pointer">
+          <label className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-shadow text-center cursor-pointer">
             📥 {t('importData')}
             <input
               type="file"
@@ -164,14 +170,29 @@ export default function Settings() {
           </label>
         </div>
       </Section>
+
+      {/* App Info */}
+      <Section title="معلومات التطبيق">
+        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-blue-800 dark:text-blue-200">دواجني</span>
+            <span className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-sm">
+              v{version}
+            </span>
+          </div>
+          <p className="text-sm text-blue-700 dark:text-blue-300 mt-2">
+            نظام إدارة حظائر الدواجن اللاحم
+          </p>
+        </div>
+      </Section>
     </div>
   );
 }
 
 function Section({ title, children }) {
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-4">
-      <h2 className="font-bold mb-3">{title}</h2>
+    <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow mb-6 border border-gray-100 dark:border-gray-700">
+      <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">{title}</h2>
       {children}
     </div>
   );
@@ -179,9 +200,9 @@ function Section({ title, children }) {
 
 function SettingRow({ label, children }) {
   return (
-    <div className="flex justify-between items-center mb-3 last:mb-0">
-      <span className="text-gray-700 dark:text-gray-300">{label}</span>
-      <div className="w-1/2">{children}</div>
+    <div className="flex flex-col mb-4 last:mb-0">
+      <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">{label}</label>
+      <div>{children}</div>
     </div>
   );
-      }
+  }
