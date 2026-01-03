@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- خلفية دائرية -->
+  <circle cx="50" cy="50" r="48" fill="#0ea5e9"/>
+  
+  <!-- رمز الدجاجة -->
+  <path d="M50 25c-8 0-15 5-18 12-2 5-2 11 1 16 2 4 6 7 10 9 3 1 6 2 9 2 3 0 6-1 9-2 4-2 8-5 10-9 3-5 3-11 1-16-3-7-10-12-18-12z" fill="white"/>
+  <circle cx="43" cy="35" r="2" fill="#0c4a6e"/>
+  <circle cx="57" cy="35" r="2" fill="#0c4a6e"/>
+  
+  <!-- رمز ERP (مخطط بياني) -->
+  <path d="M35 65h10v15h-10z" fill="white" opacity="0.9"/>
+  <path d="M50 60h10v20h-10z" fill="white" opacity="0.9"/>
+  <path d="M65 55h10v25h-10z" fill="white" opacity="0.9"/>
+</svg>
