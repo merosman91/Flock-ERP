@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route, lazy, Suspense } from 'react-router-dom';
-import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react'; // ← lazy و Suspense من 'react'
 import SplashScreen from './screens/SplashScreen';
 import Login from './screens/Login';
 import Layout from './components/Layout';
