@@ -28,12 +28,20 @@ export default function Inventory() {
 
   const handleAddOrUpdate = async (e) => {
     e.preventDefault();
+    if (!newItem.name || !newItem.quantity) return;
+    
+    const item = {
+      id: editingId || Date.now(),
+      ...newItem,
+      lastUpdated: new Date().toISOString()
+    };
+    
     if (editingId) {
       await updateInventoryQuantity(editingId, parseFloat(newItem.quantity));
-      setEditingId(null);
     } else {
-      await addInventoryItem(newItem);
+      await addInventoryItem(item);
     }
+    
     setNewItem({
       name: '',
       type: 'feed',
@@ -42,6 +50,7 @@ export default function Inventory() {
       minThreshold: '10',
       lastUpdated: new Date().toISOString()
     });
+    setEditingId(null);
     loadInventory();
   };
 
@@ -70,22 +79,24 @@ export default function Inventory() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
-        <h1 className="text-xl font-bold">{t('inventoryManagement')}</h1>
-        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-xl mb-4">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">
+          {t('inventoryManagement')}
+        </h1>
+        <div className="flex items-center space-x-3 rtl:space-x-reverse">
           <LanguageToggle />
           <ThemeToggle />
         </div>
       </header>
 
-      {/* Low Stock Alerts */}
+      {/* تنبيهات المخزون المنخفض */}
       {lowStockItems.length > 0 && (
-        <div className="bg-amber-100 dark:bg-amber-900/30 border-l-4 border-amber-500 p-4 mb-4 rounded">
+        <div className="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 p-4 mb-6 rounded-xl">
           <div className="flex items-start">
-            <span className="text-2xl mr-2">⚠️</span>
+            <span className="text-2xl mr-3">⚠️</span>
             <div>
-              <p className="font-bold">{t('lowStockAlert')}</p>
-              <ul className="list-disc list-inside mt-1 text-sm">
+              <p className="font-bold text-amber-800 dark:text-amber-200">{t('lowStockAlert')}</p>
+              <ul className="list-disc list-inside mt-2 text-sm text-amber-700 dark:text-amber-300">
                 {lowStockItems.map(item => (
                   <li key={item.id}>{item.name}: {item.quantity} {item.unit}</li>
                 ))}
@@ -95,123 +106,166 @@ export default function Inventory() {
         </div>
       )}
 
-      {/* Add/Update Form */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-6">
-        <h2 className="font-bold mb-3">
+      {/* نموذج إضافة/تعديل */}
+      <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow mb-8 border border-gray-100 dark:border-gray-700">
+        <h2 className="text-xl font-bold mb-5 text-gray-800 dark:text-white">
           {editingId ? t('editItem') : t('addItem')}
         </h2>
-        <form onSubmit={handleAddOrUpdate} className="space-y-3">
+        <form onSubmit={handleAddOrUpdate} className="space-y-5">
           <div>
-            <label className="block text-sm mb-1">{t('itemName')}</label>
+            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('itemName')}</label>
             <input
               type="text"
               value={newItem.name}
               onChange={(e) => setNewItem(prev => ({ ...prev, name: e.target.value }))}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
+              className="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500"
               required
             />
           </div>
-          <div>
-            <label className="block text-sm mb-1">{t('type')}</label>
-            <select
-              value={newItem.type}
-              onChange={(e) => setNewItem(prev => ({ ...prev, type: e.target.value }))}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
-            >
-              {inventoryTypes.map(t => (
-                <option key={t.value} value={t.value}>{t.label}</option>
-              ))}
-            </select>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label className="block text-sm mb-1">{t('quantity')}</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('type')}</label>
+              <select
+                value={newItem.type}
+                onChange={(e) => setNewItem(prev => ({ ...prev, type: e.target.value }))}
+                className="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500"
+              >
+                {inventoryTypes.map(t => (
+                  <option key={t.value} value={t.value}>{t.label}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('unit')}</label>
+              <select
+                value={newItem.unit}
+                onChange={(e) => setNewItem(prev => ({ ...prev, unit: e.target.value }))}
+                className="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500"
+                required
+              >
+                {/* وحدات عامة */}
+                <option value="kg">كيلوجرام (kg)</option>
+                <option value="ton">طن</option>
+                <option value="liter">لتر</option>
+                <option value="gallon">جالون</option>
+                
+                {/* وحدات خاصة حسب النوع */}
+                {newItem.type === 'feed' && (
+                  <>
+                    <option value="sack">جوال</option>
+                    <option value="bag">كيس</option>
+                  </>
+                )}
+                {newItem.type === 'medicine' && (
+                  <option value="bottle">قارورة</option>
+                )}
+                {newItem.type === 'equipment' && (
+                  <option value="unit">وحدة</option>
+                )}
+              </select>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('quantity')}</label>
               <input
                 type="number"
                 step="0.1"
                 value={newItem.quantity}
                 onChange={(e) => setNewItem(prev => ({ ...prev, quantity: e.target.value }))}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500"
+                placeholder="أدخل الكمية"
                 required
               />
             </div>
+            
             <div>
-              <label className="block text-sm mb-1">{t('unit')}</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('minThreshold')}</label>
               <input
-                type="text"
-                value={newItem.unit}
-                onChange={(e) => setNewItem(prev => ({ ...prev, unit: e.target.value }))}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
-                placeholder="kg, liter, pcs..."
-                required
+                type="number"
+                value={newItem.minThreshold}
+                onChange={(e) => setNewItem(prev => ({ ...prev, minThreshold: e.target.value }))}
+                className="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500"
+                placeholder="10"
               />
             </div>
           </div>
+          
           <div>
-            <label className="block text-sm mb-1">{t('minThreshold')}</label>
-            <input
-              type="number"
-              value={newItem.minThreshold}
-              onChange={(e) => setNewItem(prev => ({ ...prev, minThreshold: e.target.value }))}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
-              placeholder="10"
+            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('notes')}</label>
+            <textarea
+              value={newItem.notes || ''}
+              onChange={(e) => setNewItem(prev => ({ ...prev, notes: e.target.value }))}
+              rows="2"
+              className="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-primary-600 text-white py-2 rounded"
-          >
-            {editingId ? t('update') : t('add')}
-          </button>
-          {editingId && (
+          
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <button
-              type="button"
-              onClick={() => {
-                setEditingId(null);
-                setNewItem({
-                  name: '',
-                  type: 'feed',
-                  quantity: '',
-                  unit: 'kg',
-                  minThreshold: '10'
-                });
-              }}
-              className="w-full mt-2 text-gray-600 dark:text-gray-300"
+              type="submit"
+              className="flex-1 bg-gradient-to-r from-primary-600 to-primary-500 text-white py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all"
             >
-              {t('cancel')}
+              {editingId ? t('update') : t('add')}
             </button>
-          )}
+            {editingId && (
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingId(null);
+                  setNewItem({
+                    name: '',
+                    type: 'feed',
+                    quantity: '',
+                    unit: 'kg',
+                    minThreshold: '10',
+                    notes: ''
+                  });
+                }}
+                className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 py-3 rounded-lg font-medium"
+              >
+                {t('cancel')}
+              </button>
+            )}
+          </div>
         </form>
       </div>
 
-      {/* Inventory List */}
+      {/* قائمة المخزون */}
       <div>
-        <h2 className="font-bold mb-2">{t('currentStock')}</h2>
-        <div className="space-y-2">
+        <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">{t('currentStock')}</h2>
+        <div className="space-y-3">
           {items.length > 0 ? (
             items.map(item => (
-              <div key={item.id} className="bg-white dark:bg-gray-800 p-3 rounded shadow flex justify-between items-center">
+              <div key={item.id} className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow border border-gray-100 dark:border-gray-700 flex justify-between items-center">
                 <div>
-                  <div className="font-medium">{item.name}</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                  <div className="font-bold text-lg text-gray-800 dark:text-white">{item.name}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     {item.quantity} {item.unit} • {t(item.type)}
                   </div>
+                  {item.notes && (
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.notes}</div>
+                  )}
                 </div>
                 <button
                   onClick={() => startEdit(item)}
-                  className="text-primary-600 dark:text-primary-400"
+                  className="bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 p-2 rounded-lg hover:bg-primary-200 dark:hover:bg-primary-800 transition-colors"
                 >
                   ✏️
                 </button>
               </div>
             ))
           ) : (
-            <p className="text-center text-gray-500 dark:text-gray-400 py-4">
-              {t('noInventoryItems')}
-            </p>
+            <div className="text-center py-12">
+              <div className="text-4xl mb-4">📦</div>
+              <p className="text-gray-500 dark:text-gray-400 text-lg">{t('noInventoryItems')}</p>
+            </div>
           )}
         </div>
       </div>
     </div>
   );
-                }
+    }
