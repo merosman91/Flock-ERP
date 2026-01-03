@@ -177,6 +177,11 @@ const ar = {
   "fcr": "كفاءة تحويل العلف",
   "reportShared": "تم إنشاء تقرير من تطبيق دواجني",
   "period": "الفترة",
-  "medicine": "أدوية"
+  "medicine": "أدوية",
+  // الكلمات المضافة حديثًا
+  "vaccines": "التطعيمات",
+  "add": "إضافة",
+  "budget": "الميزانية",
+  "mortality": "النفوق",
 };
 export default ar;
