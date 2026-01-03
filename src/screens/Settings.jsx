@@ -9,17 +9,8 @@ export default function Settings() {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const [language, setLanguage] = useState(i18n.language);
-  const [weightUnit, setWeightUnit] = useState(localStorage.getItem('weightUnit') || 'kg');
   const [currency, setCurrency] = useState(localStorage.getItem('currency') || 'SDG');
-  const [version] = useState('1.2.0');
-
-  const weightUnits = [
-    { value: 'kg', label: t('kilogram') },
-    { value: 'ton', label: t('ton') },
-    { value: 'qintar', label: t('qintar') },
-    { value: 'carat', label: t('carat') },
-    { value: 'sack', label: 'جوال' }
-  ];
+  const [version] = useState('1.2.1');
 
   const currencies = [
     { value: 'SDG', label: 'جنيه سوداني (ج.س)' },
@@ -34,12 +25,6 @@ export default function Settings() {
     }
   }, [language]);
 
-  const handleWeightUnitChange = (e) => {
-    const val = e.target.value;
-    setWeightUnit(val);
-    localStorage.setItem('weightUnit', val);
-  };
-
   const handleCurrencyChange = (e) => {
     const val = e.target.value;
     setCurrency(val);
@@ -48,7 +33,7 @@ export default function Settings() {
 
   const exportData = () => {
     const data = {
-      settings: { language, weightUnit, currency, theme },
+      settings: { language, currency, theme },
       version,
       timestamp: new Date().toISOString()
     };
@@ -71,9 +56,7 @@ export default function Settings() {
         const data = JSON.parse(event.target.result);
         if (data.settings) {
           setLanguage(data.settings.language);
-          setWeightUnit(data.settings.weightUnit);
           setCurrency(data.settings.currency);
-          localStorage.setItem('weightUnit', data.settings.weightUnit);
           localStorage.setItem('currency', data.settings.currency);
           alert(t('dataImported'));
         }
@@ -103,7 +86,7 @@ export default function Settings() {
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="p-3 border rounded-lg dark:bg-gray-700 dark:text-white w-full focus:ring-2 focus:ring-primary-500"
+            className="p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white w-full focus:ring-2 focus:ring-primary-500"
           >
             <option value="ar">{t('arabic')}</option>
             <option value="en">{t('english')}</option>
@@ -120,28 +103,13 @@ export default function Settings() {
         </SettingRow>
       </Section>
 
-      {/* Units */}
-      <Section title={t('units')}>
-        <SettingRow label={t('weightUnit')}>
-          <select
-            value={weightUnit}
-            onChange={handleWeightUnitChange}
-            className="p-3 border rounded-lg dark:bg-gray-700 dark:text-white w-full focus:ring-2 focus:ring-primary-500"
-          >
-            {weightUnits.map(u => (
-              <option key={u.value} value={u.value}>{u.label}</option>
-            ))}
-          </select>
-        </SettingRow>
-      </Section>
-
       {/* Currency */}
       <Section title={t('currency')}>
         <SettingRow label={t('primaryCurrency')}>
           <select
             value={currency}
             onChange={handleCurrencyChange}
-            className="p-3 border rounded-lg dark:bg-gray-700 dark:text-white w-full focus:ring-2 focus:ring-primary-500"
+            className="p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white w-full focus:ring-2 focus:ring-primary-500"
           >
             {currencies.map(c => (
               <option key={c.value} value={c.value}>{c.label}</option>
@@ -152,15 +120,22 @@ export default function Settings() {
 
       {/* Backup */}
       <Section title={t('backup')}>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-4">
           <button
             onClick={exportData}
-            className="w-full bg-gradient-to-r from-primary-600 to-primary-500 text-white py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-shadow"
+            className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3.5 rounded-xl font-medium shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
           >
-            📤 {t('exportData')}
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+            {t('exportData')}
           </button>
-          <label className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-shadow text-center cursor-pointer">
-            📥 {t('importData')}
+          
+          <label className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white py-3.5 rounded-xl font-medium shadow-lg transition-all duration-300 transform hover:scale-[1.02] cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+            </svg>
+            <span>{t('importData')}</span>
             <input
               type="file"
               accept=".json"
@@ -173,15 +148,15 @@ export default function Settings() {
 
       {/* App Info */}
       <Section title="معلومات التطبيق">
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl">
           <div className="flex justify-between items-center">
-            <span className="font-medium text-blue-800 dark:text-blue-200">دواجني</span>
-            <span className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-sm">
-              v{version}
+            <span className="font-bold text-blue-800 dark:text-blue-200">دواجني</span>
+            <span className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">
+              الإصدار {version}
             </span>
           </div>
-          <p className="text-sm text-blue-700 dark:text-blue-300 mt-2">
-            نظام إدارة حظائر الدواجن اللاحم
+          <p className="text-sm text-blue-700 dark:text-blue-300 mt-3">
+            نظام ذكي لإدارة حظائر الدواجن اللاحم باستخدام مفهوم ERP
           </p>
         </div>
       </Section>
@@ -205,4 +180,4 @@ function SettingRow({ label, children }) {
       <div>{children}</div>
     </div>
   );
-  }
+      }
