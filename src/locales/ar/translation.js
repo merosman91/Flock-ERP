@@ -179,5 +179,4 @@ const ar = {
   "period": "الفترة",
   "medicine": "أدوية"
 };
-
 export default ar;
