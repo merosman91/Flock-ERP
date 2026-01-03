@@ -14,7 +14,7 @@ export default defineConfig({
         name: 'دواجني',
         short_name: 'Dawajny',
         description: 'تطبيق إدارة حظائر الدواجن اللاحم',
-        theme_color: '#0d9488',
+        theme_color: '#0ea5e9',
         background_color: '#ffffff',
         display: 'standalone',
         scope: '/',
@@ -29,9 +29,32 @@ export default defineConfig({
             src: 'icon-512.png',
             sizes: '512x512',
             type: 'image/png'
+          },
+          {
+            src: 'icon-512-maskable.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ],
-        lang: 'ar'
+        lang: 'ar',
+        dir: 'rtl'
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,png,svg,json}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+              }
+            }
+          }
+        ]
       }
     })
   ],
