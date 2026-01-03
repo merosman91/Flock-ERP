@@ -136,7 +136,7 @@ export default function Dashboard() {
 
       <div className="p-4">
         {/* KPIs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <KpiCard 
             title={t('temperature')} 
             value="28°C" 
@@ -161,6 +161,48 @@ export default function Dashboard() {
             icon="⚠️"
             color="from-amber-500 to-amber-600"
           />
+          <KpiCard 
+            title={t('fcr')} 
+            value="1.52" 
+            icon="📊"
+            color="from-purple-500 to-purple-600"
+          />
+        </div>
+
+        {/* بطاقة البيئة الموحدة */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow mb-6 border border-gray-100 dark:border-gray-700">
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('environment')}</h2>
+              <button 
+                onClick={() => navigate('/flocks/environment')}
+                className="text-primary-600 dark:text-primary-400 text-sm font-medium"
+              >
+                {t('viewDetails')} →
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4">
+              <MetricCard 
+                label={t('temperature')} 
+                value="28°C" 
+                icon="🌡️"
+                color="text-red-600 dark:text-red-400"
+              />
+              <MetricCard 
+                label={t('humidity')} 
+                value="65%" 
+                icon="💧"
+                color="text-blue-600 dark:text-blue-400"
+              />
+              <MetricCard 
+                label="CO2" 
+                value="1200 ppm" 
+                icon="💨"
+                color="text-amber-600 dark:text-amber-400"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Active Batches */}
@@ -214,8 +256,8 @@ export default function Dashboard() {
               </div>
             ) : (
               <div className="text-center py-8">
-                <div className="text-gray-400 dark:text-gray-500 mb-2">🐣</div>
-                <p className="text-gray-500 dark:text-gray-400">{t('noBatches')}</p>
+                <div className="text-4xl mb-4">🐣</div>
+                <p className="text-gray-500 dark:text-gray-400 text-lg">{t('noBatches')}</p>
               </div>
             )}
           </div>
@@ -224,7 +266,6 @@ export default function Dashboard() {
         {/* Charts */}
         <div className="space-y-6">
           <ChartSection title={t('feedConsumed')} data={feedChart} options={options} />
-          <ChartSection title={t('temperature')} data={tempChart} options={options} />
           <ChartSection title={t('mortalityRate')} data={mortalityChart} options={options} />
         </div>
       </div>
@@ -242,6 +283,16 @@ function KpiCard({ title, value, icon, color }) {
   );
 }
 
+function MetricCard({ label, value, icon, color }) {
+  return (
+    <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+      <div className="text-xl mb-1">{icon}</div>
+      <div className={`font-bold text-lg ${color}`}>{value}</div>
+      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{label}</div>
+    </div>
+  );
+}
+
 function ChartSection({ title, data, options }) {
   return (
     <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow border border-gray-100 dark:border-gray-700">
@@ -251,4 +302,4 @@ function ChartSection({ title, data, options }) {
       </div>
     </div>
   );
-                }
+                  }
