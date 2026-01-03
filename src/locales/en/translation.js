@@ -179,5 +179,4 @@ const en = {
   "period": "Period",
   "medicine": "Medicine"
 };
-
 export default en;
