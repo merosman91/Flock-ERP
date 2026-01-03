@@ -14,18 +14,40 @@ export default {
           200: '#bae6fd',
           300: '#7dd3fc',
           400: '#38bdf8',
-          500: '#0ea5e9', // أزرق احترافي بدل الأخضر
+          500: '#0ea5e9',
           600: '#0284c7',
           700: '#0369a1',
           800: '#075985',
           900: '#0c4a6e',
+        },
+        success: {
+          500: '#10b981',
+          600: '#059669'
+        },
+        warning: {
+          500: '#f59e0b',
+          600: '#d97706'
+        },
+        danger: {
+          500: '#ef4444',
+          600: '#dc2626'
         }
       },
       fontFamily: {
         sans: ['"Segoe UI"', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
-        arabic: ['"Tajawal"', 'sans-serif'] // خط عربي أنيق
+        arabic: ['"Tajawal"', 'sans-serif']
+      },
+      animation: {
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'fade-in': 'fadeIn 0.5s ease-in forwards'
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: 0, transform: 'translateY(10px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' }
+        }
       }
     },
   },
   plugins: [],
-               }
+          }
