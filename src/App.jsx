@@ -20,8 +20,6 @@ const Settings = lazy(() => import('./screens/Settings'));
 const Finance = lazy(() => import('./screens/Finance'));
 const Inventory = lazy(() => import('./screens/Inventory'));
 
-const WithLayout = ({ children }) => <Layout>{children}</WithLayout>;
-
 const LazyComponent = ({ children }) => (
   <Suspense fallback={
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -46,28 +44,63 @@ function App() {
         <Route path="/" element={<SplashScreen />} />
         <Route path="/login" element={<Login />} />
         
-        {/* الشاشات التي تتطلب Layout */}
-        <Route path="/dashboard" element={
-          <WithLayout><LazyComponent><Dashboard /></LazyComponent></WithLayout>
-        } />
-        <Route path="/flocks" element={
-          <WithLayout><LazyComponent><FlockList /></LazyComponent></WithLayout>
-        } />
-        <Route path="/inventory" element={
-          <WithLayout><LazyComponent><Inventory /></LazyComponent></WithLayout>
-        } />
-        <Route path="/finance" element={
-          <WithLayout><LazyComponent><Finance /></LazyComponent></WithLayout>
-        } />
-        <Route path="/reports" element={
-          <WithLayout><LazyComponent><Reports /></LazyComponent></WithLayout>
-        } />
-        <Route path="/settings" element={
-          <WithLayout><LazyComponent><Settings /></LazyComponent></WithLayout>
-        } />
-        <Route path="/notifications" element={
-          <WithLayout><LazyComponent><Notifications /></LazyComponent></WithLayout>
-        } />
+        {/* الشاشات التي تتطلب Layout - الطريقة الصحيحة */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <Layout>
+              <LazyComponent><Dashboard /></LazyComponent>
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/flocks" 
+          element={
+            <Layout>
+              <LazyComponent><FlockList /></LazyComponent>
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/inventory" 
+          element={
+            <Layout>
+              <LazyComponent><Inventory /></LazyComponent>
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/finance" 
+          element={
+            <Layout>
+              <LazyComponent><Finance /></LazyComponent>
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/reports" 
+          element={
+            <Layout>
+              <LazyComponent><Reports /></LazyComponent>
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/settings" 
+          element={
+            <Layout>
+              <LazyComponent><Settings /></LazyComponent>
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/notifications" 
+          element={
+            <Layout>
+              <LazyComponent><Notifications /></LazyComponent>
+            </Layout>
+          } 
+        />
         
         {/* الشاشات بدون Layout */}
         <Route path="/flocks/new" element={<FlockForm />} />
