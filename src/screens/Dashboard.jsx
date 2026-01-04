@@ -174,13 +174,23 @@ export default function Dashboard() {
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('environment')}</h2>
+
+               // زر إضافة دفعة جديدة
+               <button
+                 onClick={() => navigate('/flocks/new')}
+                 className="bg-gradient-to-r from-primary-600 to-primary-500 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2 rtl:space-x-reverse"
+                >
+                 <span>+</span>
+                 <span>{t('addBatch')}</span>
+               </button>
+
+                // زر عرض تفاصيل البيئة
               <button 
-                onClick={() => navigate('/flocks/environment')}
+                onClick={() => navigate('/flocks/environment')} // ❌ خطأ هنا!
                 className="text-primary-600 dark:text-primary-400 text-sm font-medium"
-              >
+               >
                 {t('viewDetails')} →
               </button>
-            </div>
             
             <div className="grid grid-cols-3 gap-4">
               <MetricCard 
