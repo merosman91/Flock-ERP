@@ -12,8 +12,9 @@ export default function Inventory() {
     type: 'feed',
     quantity: '',
     unit: 'kg',
+    unitPrice: '',
     minThreshold: '10',
-    lastUpdated: new Date().toISOString()
+    notes: ''
   });
   const [editingId, setEditingId] = useState(null);
 
@@ -47,8 +48,9 @@ export default function Inventory() {
       type: 'feed',
       quantity: '',
       unit: 'kg',
+      unitPrice: '',
       minThreshold: '10',
-      lastUpdated: new Date().toISOString()
+      notes: ''
     });
     setEditingId(null);
     loadInventory();
@@ -60,7 +62,9 @@ export default function Inventory() {
       type: item.type,
       quantity: item.quantity.toString(),
       unit: item.unit,
-      minThreshold: item.minThreshold?.toString() || '10'
+      unitPrice: item.unitPrice?.toString() || '',
+      minThreshold: item.minThreshold?.toString() || '10',
+      notes: item.notes || ''
     });
     setEditingId(item.id);
   };
@@ -145,13 +149,11 @@ export default function Inventory() {
                 className="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500"
                 required
               >
-                {/* وحدات عامة */}
                 <option value="kg">كيلوجرام (kg)</option>
                 <option value="ton">طن</option>
                 <option value="liter">لتر</option>
                 <option value="gallon">جالون</option>
                 
-                {/* وحدات خاصة حسب النوع */}
                 {newItem.type === 'feed' && (
                   <>
                     <option value="sack">جوال</option>
@@ -183,6 +185,20 @@ export default function Inventory() {
             </div>
             
             <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('unitPrice')}</label>
+              <input
+                type="number"
+                step="0.01"
+                value={newItem.unitPrice}
+                onChange={(e) => setNewItem(prev => ({ ...prev, unitPrice: e.target.value }))}
+                className="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500"
+                placeholder="0.00"
+              />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
               <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('minThreshold')}</label>
               <input
                 type="number"
@@ -192,16 +208,16 @@ export default function Inventory() {
                 placeholder="10"
               />
             </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('notes')}</label>
-            <textarea
-              value={newItem.notes || ''}
-              onChange={(e) => setNewItem(prev => ({ ...prev, notes: e.target.value }))}
-              rows="2"
-              className="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500"
-            />
+            
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('notes')}</label>
+              <textarea
+                value={newItem.notes || ''}
+                onChange={(e) => setNewItem(prev => ({ ...prev, notes: e.target.value }))}
+                rows="2"
+                className="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
@@ -221,6 +237,7 @@ export default function Inventory() {
                     type: 'feed',
                     quantity: '',
                     unit: 'kg',
+                    unitPrice: '',
                     minThreshold: '10',
                     notes: ''
                   });
@@ -245,6 +262,11 @@ export default function Inventory() {
                   <div className="font-bold text-lg text-gray-800 dark:text-white">{item.name}</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     {item.quantity} {item.unit} • {t(item.type)}
+                    {item.unitPrice && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {t('unitPrice')}: {item.unitPrice} ج.س
+                      </div>
+                    )}
                   </div>
                   {item.notes && (
                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.notes}</div>
@@ -268,4 +290,4 @@ export default function Inventory() {
       </div>
     </div>
   );
-    }
+        }
