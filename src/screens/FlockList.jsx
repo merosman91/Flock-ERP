@@ -45,6 +45,12 @@ export default function FlockList() {
       <header className="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center rounded-lg mb-4">
         <h1 className="text-xl font-bold">{t('batches')}</h1>
         <div className="flex items-center space-x-2 rtl:space-x-reverse">
+          <button
+            onClick={() => navigate('/flocks/new')}
+            className="bg-gradient-to-r from-primary-600 to-primary-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium"
+          >
+            + {t('addBatch')}
+          </button>
           <LanguageToggle />
           <ThemeToggle />
         </div>
@@ -108,4 +114,4 @@ export default function FlockList() {
       </div>
     </div>
   );
-            }
+} 
