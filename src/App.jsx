@@ -20,7 +20,7 @@ const Settings = lazy(() => import('./screens/Settings'));
 const Finance = lazy(() => import('./screens/Finance'));
 const Inventory = lazy(() => import('./screens/Inventory'));
 
-const WithLayout = ({ children }) => <Layout>{children}</Layout>;
+const WithLayout = ({ children }) => <Layout>{children}</WithLayout>;
 
 const LazyComponent = ({ children }) => (
   <Suspense fallback={
